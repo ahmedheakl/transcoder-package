@@ -1,0 +1,9 @@
+torch 
+numpy
+fastBPE
+apex
+libclang==10.0.1
+submitit
+six
+sacrebleu==1.2.11
+googledrivedownloader

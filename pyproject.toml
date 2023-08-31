@@ -1,0 +1,44 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transcode"
+version = "1.1.0"
+description = "Packing transcoder model"
+readme = "README.md"
+authors = [{ name = "Ahmed Heakl", email = "ahmed.heakl@ejust.edu.eg" }]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.7"
+keywords = ["transcoder", "XLM", "natural language", "facebook",
+            "META", "pytorch"]
+dynamic = ["dependencies"]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+
+    [project.optional-dependencies]
+    build = ["build", "twine"]
+    dev   = ["black", "bumpver"]
+
+    [project.scripts]
+    translate = "transcoder.translate:main"
+
+    [project.urls]
+    repository = "https://github.com/ahmedheakl/transcoder-package"
+
+
+[tool.bumpver]
+current_version = "1.1.0"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message  = "bump version {old_version} -> {new_version}"
+
+    [tool.bumpver.file_patterns]
+    "pyproject.toml" = [
+        'current_version = "{version}"',
+        'version = "{version}"',
+    ]

@@ -1,0 +1,4 @@
+[TYPECHECK]
+# Add the missing members of classes to the member-checker
+ignored-modules= torch
+extension-pkg-allow-list= fastBPE
