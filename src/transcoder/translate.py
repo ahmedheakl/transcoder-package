@@ -19,6 +19,7 @@ from typing import Tuple
 import argparse
 import os
 import sys
+from dataclasses import dataclass
 
 import fastBPE
 import torch
@@ -45,6 +46,17 @@ BPE_CODE_LINK = (
 FIRST_MODEL_PAIRS = ["cpp -> java", "java -> cpp", "java -> python"]
 
 SECOND_MODEL_PAIRS = ["cpp -> python", "python -> cpp", "python -> java"]
+
+
+@dataclass
+class TranslatorParams:
+    """Parameters for Translator"""
+
+    model_path: str = ""
+    src_lang: str = "cpp"
+    tgt_lang: str = "python"
+    BPE_path: str = ""
+    beam_size: int = 1
 
 
 def get_parser():
@@ -256,6 +268,40 @@ class Translator:
             for token in tok:
                 results.append(detokenizer(token))
             return results
+
+
+def translate(src_lang: str, tgt_lang: str, input_code: str) -> str:
+    """Main function for translation
+
+    Args:
+        src_lang (str): Source langauge name [py, cpp, java]
+        tgt_lang (str): Target langauge name [py, cpp, java]
+        input_code (str): Text for input code
+
+    Returns:
+        str: Translated code
+    """
+    params = TranslatorParams()
+    params.src_lang = src_lang
+    params.tgt_lang = tgt_lang
+    model_weight, bpe_codes = download_model(
+        first_model=f"{src_lang} -> {tgt_lang}" in FIRST_MODEL_PAIRS
+    )
+    params.model_path = model_weight
+    params.BPE_path = bpe_codes
+    params.beam_size = 1
+
+    translator = Translator(params)
+
+    with torch.no_grad():
+        output = translator.translate(
+            input_code,
+            lang1=params.src_lang,
+            lang2=params.tgt_lang,
+            beam_size=params.beam_size,
+        )
+
+    return output
 
 
 def main():
